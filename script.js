@@ -16,6 +16,10 @@ window.onload = function() {
 	var numForme = 0;
 	// Sélection de la version de la forme à afficher (différentes rotations possibles)
     var rotation = 0;
+
+	var couleursFormes = new Array();    
+    couleursFormes= ['#0341AE','#72CB3B','#FFD500','#FF971C',
+    			'#FF3213','#008B8B','#9900CC'];
     
 	// Tableau de définition des formes = {I,J,L,O,S,T,Z}
     var forme = new Array();
@@ -159,9 +163,9 @@ window.onload = function() {
 		for(x=0 ; x<forme[numForme][rotation].length ; x++) {
 			for(y=0 ; y<forme[numForme][rotation].length ; y++) {
                 if(forme[numForme][rotation][y][x] == 1) {
-                    ctx.fillStyle = "#FF0000";
+                    ctx.fillStyle = "#000";
                     ctx.fillRect((formX + x) * carreau, (formY + y) * carreau, carreau, carreau);
-                    ctx.fillStyle = "#00FF00";
+                    ctx.fillStyle = couleursFormes[numForme];
                     ctx.fillRect((formX + x) * carreau + 1, (formY + y) * carreau + 1, carreau - 2, carreau - 2);
                 }
             }
@@ -179,6 +183,8 @@ window.onload = function() {
 		drawForme();
         
         ctx.restore();
+
+        console.log('numForme '+numForme+'\nretation '+rotation)
     }
 
 	// Initialisation du canvas
@@ -202,19 +208,21 @@ window.onload = function() {
             // keycodes : https://keycode.info/
             case 38:  // flèche haut => rotation horaire de la forme
                 rotation++;
-                if(rotation >  forme[numForme].length - 1) rotation = 0;
+                if(rotation>forme[numForme].length-1) rotation = 0;
                 refreshCanvas();
                 break;
 
             case 40:  // flèche bas => rotation dans le sens anti-horaire de la forme
-                rotation--;
-                if(rotation <  0) rotation = forme[numForme].length - 1;
+                if(rotation>forme[numForme].length-1) rotation = forme[numForme].length-1;
+                rotation--; 
+                if(rotation<0) rotation = forme[numForme].length-1;
                 refreshCanvas();
                 break;
             
             case 84:  // toutche t permettra  de changer la forme afficher
                 numForme++;
                 if(numForme > 6) numForme = 0;
+                if(rotation>forme[numForme].length-1) rotation = 0;
                 refreshCanvas();
                 break;
         }
