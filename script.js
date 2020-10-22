@@ -17,6 +17,10 @@ window.onload = function() {
 	// Sélection de la version de la forme à afficher (différentes rotations possibles)
     var rotation = 0;
 
+    // delay permettra d'accélérer le jeu
+    var delay = 250; // 250ms
+
+    // Tableau des couleurs pour les pieces 
 	var couleursFormes = new Array();    
     couleursFormes= ['#0341AE','#72CB3B','#FFD500','#FF971C',
     			'#FF3213','#008B8B','#9900CC'];
@@ -176,15 +180,14 @@ window.onload = function() {
 	//  - efface le canvas
 	//  - dessine la forme
     function refreshCanvas() {
-		ctx.save();								   
-        
+		ctx.save();								           
 		ctx.clearRect(0,0,largeurGrille * carreau, hauteurGrille * carreau);
-		
 		drawForme();
-        
         ctx.restore();
+       	formY++;
+       	if (formY==28) formY=0;
+        var timeoutID =  window.setTimeout(refreshCanvas, delay);
 
-        console.log('numForme '+numForme+'\nretation '+rotation)
     }
 
 	// Initialisation du canvas
@@ -209,22 +212,32 @@ window.onload = function() {
             case 38:  // flèche haut => rotation horaire de la forme
                 rotation++;
                 if(rotation>forme[numForme].length-1) rotation = 0;
-                refreshCanvas();
+                //refreshCanvas();
                 break;
 
             case 40:  // flèche bas => rotation dans le sens anti-horaire de la forme
                 if(rotation>forme[numForme].length-1) rotation = forme[numForme].length-1;
                 rotation--; 
                 if(rotation<0) rotation = forme[numForme].length-1;
-                refreshCanvas();
+                //refreshCanvas();
                 break;
             
             case 84:  // toutche t permettra  de changer la forme afficher
                 numForme++;
                 if(numForme > 6) numForme = 0;
                 if(rotation>forme[numForme].length-1) rotation = 0;
-                refreshCanvas();
+                //refreshCanvas();
                 break;
+
+            case 37:  // flèche gauche => deplacer la forme à gauche
+                formX--;
+                if(formX<=0) formX = 0;
+                break;
+
+			case 39:  // flèche droite => deplacer la forme à droite
+                formX++;
+                if(formX>=largeurGrille-(forme[numForme].length-1)) formX = largeurGrille-(forme[numForme].length-1);
+                break;                
         }
     }    
 }
